@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Player Performance Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-theme="light">
+  <header>
+    <h1 class="title"><i class="fas fa-brain"></i> AI Player Intelligence</h1>
+    <nav>
+      <ul>
+        <li><a href="#dashboard" onclick="navigateTo('dashboard')">Dashboard</a></li>
+        <li><a href="#">Reports</a></li>
+        <li><a href="#alerts" onclick="navigateTo('alerts')">Alerts</a></li>
+        <li><a href="#" onclick="openModal()">Profile</a></li>
+        <li><button onclick="toggleTheme()">Toggle Theme</button></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>Player Overview</h2>
+      <div class="tabs">
+        <button class="active" onclick="showTab('overview')">Overview</button>
+        <button onclick="showTab('stats')">Stats</button>
+      </div>
+      <div id="overviewTab">
+        <p><strong>Name:</strong> John Doe</p>
+        <p><strong>Position:</strong> Midfielder</p>
+        <p><strong>Health Status:</strong> Good</p>
+        <p><strong>Last Match Rating:</strong> 7.8</p>
+      </div>
+      <div id="statsTab" style="display:none">
+        <p>Speed: 28 km/h</p>
+        <p>Stamina: 85%</p>
+        <p>Agility: High</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><i class="fas fa-chart-line"></i> Performance Trend</h2>
+      <canvas id="performanceChart"></canvas>
+    </div>
+
+    <div class="card">
+      <h2><i class="fas fa-notes-medical"></i> Injury Risk Forecast</h2>
+      <canvas id="injuryChart"></canvas>
+    </div>
+
+    <div class="card">
+      <h2>AI Insights</h2>
+      <ul>
+        <li>High fatigue risk detected. Suggest rest day.</li>
+        <li>Pass accuracy has improved by 12%.</li>
+        <li>Recommendation: focus on agility drills.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2><i class="fas fa-bell"></i> Notifications</h2>
+      <ul>
+
+        <li>Injury risk detected</li>
+        <li>Fatigue risk detected</li>
+        <li>Performance boost detected</li>
+        <li>Agility boost detected</li>
+        <li>Stamina boost detected</li>
+        <li>Speed boost detected</li>
+        <li>Strength boost detected</li>
+      </ul>
+    </div>
+
+    <section id="alerts" class="page" style="display:none">
+      <div class="card">
+        <h2><i class="fas fa-exclamation-triangle"></i> AI Alerts</h2>
+        <ul>
+          <li>⚠️ Fatigue detected – recommend 24h rest.</li>
+          <li>✅ 14% improvement in pass accuracy this week.</li>
+          <li>📈 Agility boost noted – maintain current drills.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+  
+  <div class="notification" id="notification">This is a notification</div>
+
+  <!-- Modal -->
+  <div id="profileModal" class="modal">
+    <div class="modal-content">
+      <h3>Edit Profile</h3>
+      <form onsubmit="submitProfile(event)">
+        <label>Name:<input type="text" id="nameInput" /></label><br/><br/>
+        <label>Position:<input type="text" id="positionInput" /></label><br/><br/>
+        <button type="submit">Save</button>
+        <button type="button" onclick="closeModal()">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const ctx1 = document.getElementById('performanceChart').getContext('2d');
+    const ctx2 = document.getElementById('injuryChart').getContext('2d');
+
+    const performanceChart = new Chart(ctx1, {
+      type: 'line',
+      data: {
+        labels: ['Game 1', 'Game 2', 'Game 3', 'Game 4'],
+        datasets: [{
+          label: 'Performance Rating',
+          data: [6.5, 7.0, 7.8, 8.2],
+          borderColor: '#3b82f6',
+          fill: false,
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false
+      }
+    });
+
+    const injuryChart = new Chart(ctx2, {
+      type: 'bar',
+      data: {
+        labels: ['Speed', 'Stamina', 'Agility'],
+        datasets: [{
+          label: 'Risk Factor',
+          data: [2, 4, 3],
+            backgroundColor: ['#f87171', '#34d399', '#facc15'],
+          
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false
+      }
+    });
+
+    function openModal() {
+      document.getElementById('profileModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('profileModal').style.display = 'none';
+    }
+
+    function toggleTheme() {
+      const body = document.body;
+      const isDark = body.getAttribute('data-theme') === 'dark';
+      body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      body.style.backgroundColor = isDark ? '#f8fafc' : '#111827';
+      body.style.color = isDark ? '#111827' : '#f8fafc';
+    }
+
+    function showTab(tab) {
+      document.getElementById('overviewTab').style.display = tab === 'overview' ? 'block' : 'none';
+      document.getElementById('statsTab').style.display = tab === 'stats' ? 'block' : 'none';
+      document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
+      document.querySelector(`.tabs button[onclick*="${tab}"]`).classList.add('active');
+    }
+
+    function submitProfile(event) {
+      event.preventDefault();
+      const name = document.getElementById('nameInput').value;
+      const position = document.getElementById('positionInput').value;
+      alert(`Profile Updated:\nName: ${name}\nPosition: ${position}`);
+      showNotification("Profile successfully updated");
+      closeModal();
+    }
+
+    
+    function navigateTo(section) {
+      document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+      document.getElementById(section).style.display = 'grid';
+      showNotification(`${section.charAt(0).toUpperCase() + section.slice(1)} loaded`);
+    }
+
+    function showNotification(message) {
+      const notification = document.getElementById('notification');
+      notification.textContent = message;
+      notification.classList.add('show');
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 4000);
+    }
+
+    // Simulate Live Updates
+
+    // Live Update Simulation
+    function simulateLiveUpdates() {
+      setInterval(() => {
+        const value = Math.round(Math.random() * 10);
+        performanceChart.data.datasets[0].data.push(value);
+        performanceChart.data.labels.push(`Game ${performanceChart.data.labels.length + 1}`);
+        performanceChart.update();
+      }, 5000);
+    }
+
+
+
+    simulateLiveUpdates();
+  </script>
+</body>
+</html>
