@@ -1,4 +1,4 @@
-# [AI-Based-Player-Performance-Prediction](https://ai-based-player-prediction.netlify.app/)]
+# [AI-Based-Player-Performance-Prediction](https://ai-based-player-prediction.netlify.app/)
 
 
 
